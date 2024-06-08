@@ -15,8 +15,6 @@ export default function InstructionsComponent() {
 					<span>/pages/index.js</span>
 				</p>
 			</header>
-
-
 		</div>
 	);
 }
