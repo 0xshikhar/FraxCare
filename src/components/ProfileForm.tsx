@@ -5,7 +5,7 @@ import { BsArrowRight } from 'react-icons/bs'
 import { useRouter } from 'next/navigation';
 import { useProvider } from 'wagmi';
 
-const ProfileForm = () => {
+const ProfileForm: React.FC = () => {
     const router = useRouter();
     const [nftName, setNftName] = useState('');
     const [nftDescription, setNftDescription] = useState('');

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/navigation";
 import React, { useState } from "react";
-// import AppLogo from '../assets/app-logo.png'
+import fraxLogo from "../../../public/images/frax-logo.png"
 import { AiOutlineSearch } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
@@ -33,7 +33,7 @@ export default function Navbar() {
 		<div className={style.wrapper}>
 			<Link href="/">
 				<div className={style.logoContainer}>
-					{/* <Image src={mantleSeaLogo} height={80} width={200} alt="mantle logo" /> */}
+					<Image src={fraxLogo} height={80} width={200} alt="mantle logo" />
 					<div className="text-[32px] text-white font-serif"
 					>
 						FraxCare
