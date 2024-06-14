@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
 import { BsArrowRight } from 'react-icons/bs'
-// import NFTform from '../components/NFTform';
+import ProfileForm from '@/components/ProfileForm';
 
 export default function Create() {
     return (
@@ -24,8 +24,8 @@ export default function Create() {
                 </figure>
 
                 <figure className="flex flex-col items-center justify-center pt-10 ">
-                    <div className="text-center px-[50px] align-middle w-[600px] h-[600px] p-8 bg-[#202020] rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                        {/* <NFTform /> */}
+                    <div className="text-center px-[50px] align-middle w-[600px]  py-10 bg-[#202020] rounded-3xl shadow dark:bg-gray-800 dark:border-gray-700">
+                        <ProfileForm />
                     </div>
                 </figure>
             </div>

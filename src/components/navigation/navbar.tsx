@@ -33,8 +33,8 @@ export default function Navbar() {
 		<div className={style.wrapper}>
 			<Link href="/">
 				<div className={style.logoContainer}>
-					<Image src={fraxLogo} height={80} width={200} alt="mantle logo" />
-					<div className="text-[32px] text-white font-serif"
+					<Image src={fraxLogo} height={40} width={70} alt="mantle logo" />
+					<div className="text-[32px] text-white font-serif pl-5"
 					>
 						FraxCare
 					</div>
@@ -51,7 +51,16 @@ export default function Navbar() {
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/");
+							router.push("/create");
+						}}
+					>
+						Create Profile
+					</div>
+					
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/dashboard");
 						}}
 					>
 						Dashboard
@@ -60,27 +69,18 @@ export default function Navbar() {
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/stake");
+							router.push("/records");
 						}}
 					>
-						Stake
-					</div>
-
-					<div
-						className={style.headerItem}
-						onClick={() => {
-							router.push("/restake");
-						}}
-					>
-						Restake
+						Records
 					</div>
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/avs");
+							router.push("/doctors");
 						}}
 					>
-						AVS
+						Doctors
 					</div>
 				</div>
 			</div>

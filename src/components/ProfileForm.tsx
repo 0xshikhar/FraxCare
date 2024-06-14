@@ -3,121 +3,151 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { BsArrowRight } from 'react-icons/bs'
 import { useRouter } from 'next/navigation';
-import { useProvider } from 'wagmi';
+import { useAccount } from "wagmi";
+import { config } from '@/lib/config'
+import { ethers } from 'ethers';
+import { v4 as uuidv4 } from 'uuid';
+
+interface PatientFormState {
+    name: string;
+    age: string;
+    country: string;
+    gender: string;
+    category: string;
+    uniqueId: string;
+}
 
 const ProfileForm: React.FC = () => {
     const router = useRouter();
-    const [nftName, setNftName] = useState('');
-    const [nftDescription, setNftDescription] = useState('');
-    const [nftImage, setNftImage] = useState('');
-    const [nftPrice, setNftPrice] = useState('');
-    const provider = useProvider();
-    console.log("provider", provider._network.chainId)
+    const address = useAccount();
+    console.log("address", address)
 
-    const onFormSubmit = async (event) => {
-        window.my_modal_3.showModal();
+    const [formState, setFormState] = useState<PatientFormState>({
+        name: '',
+        age: '',
+        country: '',
+        gender: '',
+        category: '',
+        uniqueId: '',
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormState(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-    }
 
-    const nameHandler = (event) => {
-        setNftName(event.target.value);
-    }
+        const uniqueId = uuidv4(); // Generate a unique ID for the NFT  
+        console.log("handle submit called", formState, uniqueId)
 
-    const descriptionHandler = (event) => {
-        setNftDescription(event.target.value);
-    }
+        const contractAddress = 'YOUR_CONTRACT_ADDRESS';
+        const abi = [
+            "function mintPatientNFT(address to, string memory name, uint256 age, string memory country, string memory gender, string memory category, string memory uniqueId) public"
+        ];
 
-    const imageHandler = (event) => {
-        // do ipfs upload here and set the image url to nftImage
-        setNftImage(event.target.value);
-    }
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
 
-    const priceHandler = (event) => {
-        setNftPrice(event.target.value);
-    }
+        try {
+            const transaction = await contract.mintPatientNFT(
+                await signer.getAddress(),
+                formState.name,
+                parseInt(formState.age),
+                formState.country,
+                formState.gender,
+                formState.category,
+                uniqueId
+            );
 
-
+            console.log('Minting transaction:', transaction);
+        } catch (error) {
+            console.error('Error minting NFT:', error);
+        }
+    };
     return (
         <div>
             {/* create nft form  */}
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center align-between justify-center">
                 <div className="w-full pt-5 max-w-lg">
-                    <form >
+                    <form onSubmit={handleSubmit}>
                         <div className=" flex flex-col text-left mb-6">
                             <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Your Full Name</label>
-                            <input type="text" id="input-name" value={nftName} onChange={nameHandler} className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="Johny Singh" required />
+                            <input
+                                type="text"
+                                name="name"
+                                value={formState.name}
+                                onChange={handleChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                required
+                            />
                         </div>
-                        <div className=" flex flex-col text-left mb-6">
-                            <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Enter NFT Description</label>
-                            <input type="text" id="input-name" value={nftDescription} onChange={descriptionHandler} className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="Write about your collection details here" required />
-                        </div>
-
-                        <div className="form-group">
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">
-                                    Gender:
-                                </label>
+                        <div className=" flex flex-row text-left gap-4 ">
+                            <div className=" flex flex-col text-left mb-6 md:w-1/2">
+                                <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Age</label>
+                                <input
+                                    type="number"
+                                    name="age"
+                                    value={formState.age}
+                                    onChange={handleChange}
+                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                    required
+                                />
+                            </div>
+                            <div className=" flex flex-col text-left mb-6 md:w-1/2">
+                                <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Gender</label>
                                 <select
                                     name="gender"
-                                    value={patient.gender}
-                                    onChange={handleInputChange}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    value={formState.gender}
+                                    onChange={handleChange}
+                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                    required
                                 >
+                                    <option value="">Select</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
-                                    <option value="unknown">Unknown</option>
                                 </select>
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">
-                                    Birth Date:
-                                </label>
-                                <input
-                                    type="date"
-                                    name="birthDate"
-                                    value={patient.birthDate}
-                                    onChange={handleInputChange}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
                         </div>
 
                         <div className=" flex flex-col text-left mb-6">
-                            <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Upload NFT Image</label>
-                            <input type="file" id="input-name" onChange={imageHandler} className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
+                            <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Country</label>
+                            <input
+                                type="text"
+                                name="country"
+                                value={formState.country}
+                                onChange={handleChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                required
+                            />
                         </div>
 
                         <div className=" flex flex-col text-left mb-6">
-                            <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Enter NFT Price</label>
-                            <input type="number" id="input-name" value={nftPrice} onChange={priceHandler} className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="0.1 ETH" required />
+                        <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Category</label>
+                            <select
+                                name="category"
+                                value={formState.category}
+                                onChange={handleChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                required
+                            >
+                                <option value="">Select</option>
+                                <option value="male">Patient</option>
+                                <option value="female">Doctor</option>
+                                <option value="other">Institute</option>
+                            </select>
                         </div>
 
-                        <button onClick={onFormSubmit}
-                            className="flex justify-start relative text-lg px-8 py-3 bg-[#98ee2c]  mr-5 uppercase font-Agda font-bold text-black hover:bg-[#f0f0f0] cursor-pointer" >
+                        <button type="submit" className="flex justify-start relative text-lg px-8 py-3 bg-[#98ee2c]  mr-5 uppercase font-Agda font-bold text-black hover:bg-[#f0f0f0] cursor-pointer" >
                             Mint Your Identity Pass
                             <BsArrowRight className='mt-1 ml-2' />
                         </button>
-
-                        {/* <div className="mb-6">
-                            <label htmlFor="tokens" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Amount To Transfer</label>
-                            <input type="tokens" onChange={amountHandler} id="input-amount" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="0 ETH" required />
-                        </div>
-                        <div className="mb-6">
-                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Verfication Code</label>
-                            <input type="number" id="input-otp" onChange={aHandler}
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="Code" required />
-                        </div> */}
-                        {/* <div className="flex items-start mb-6">
-                                    <div className="flex items-center h-5">
-                                        <input id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
-                                    </div>
-                                    <label htmlFor="terms" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Verifying <a className="text-blue-600 hover:underline dark:text-blue-500">Transaction</a></label>
-                                </div> */}
-                        {/* <button type="submit" onClick={naiveProve}
-                            disabled={otpDisable} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Send
-                        </button> */}
                     </form>
 
                     <dialog id="my_modal_3" className="modal">

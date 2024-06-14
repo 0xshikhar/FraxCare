@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <main>
-        <section className="relative bg-green-50 dark:bg-gray-900/30 pt-28 lg:pt-18 pb-32 lg:pb-4">
+        <section className="relative bg-green-50 dark:bg-gradient-to-r from-gray-800 via-gray-900 to-black pt-28 lg:pt-18 pb-32 lg:pb-4">
           <div className="mx-auto lg:max-w-7xl w-full px-5 sm:px-10 md:px-12 lg:px-5 relative">
             <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 lg:-translate-x-0 lg:-translate-y-0 lg:left-0 lg:top-16 w-40 h-40 skew-x-6 opacity-50 dark:opacity-80 rounded-full bg-gradient-to-bl from-green-600 to-sky-400 blur-3xl flex" />
             <div className="flex text-center lg:text-left flex-col lg:items-center lg:flex-row gap-8 lg:gap-10 xl:gap-12 relative max-w-4xl lg:max-w-none">
