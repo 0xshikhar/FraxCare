@@ -7,6 +7,10 @@ import { useAccount } from "wagmi";
 import { config } from '@/lib/config'
 import { ethers } from 'ethers';
 import { v4 as uuidv4 } from 'uuid';
+import IdentityPassNFT from '@/lib/contracts/IdentityPassNFT.json';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+// declare module 'uuid';
 
 interface PatientFormState {
     name: string;
@@ -45,18 +49,14 @@ const ProfileForm: React.FC = () => {
         const uniqueId = uuidv4(); // Generate a unique ID for the NFT  
         console.log("handle submit called", formState, uniqueId)
 
-        const contractAddress = 'YOUR_CONTRACT_ADDRESS';
-        const abi = [
-            "function mintPatientNFT(address to, string memory name, uint256 age, string memory country, string memory gender, string memory category, string memory uniqueId) public"
-        ];
+        const contractAddress = '0x6E83054913aA6C616257Dae2e87BC44F9260EDc6';
 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const contract = new ethers.Contract(contractAddress, IdentityPassNFT.abi, signer);
 
         try {
-            const transaction = await contract.mintPatientNFT(
-                await signer.getAddress(),
+            const transaction = await contract.mintIdentityNFT(
                 formState.name,
                 parseInt(formState.age),
                 formState.country,
@@ -66,8 +66,31 @@ const ProfileForm: React.FC = () => {
             );
 
             console.log('Minting transaction:', transaction);
+            toast.success("Identity Pass Minted !", {
+                position: "top-center"
+            });
+
+            toast(
+                <div>
+                    Link - {`https://holesky.fraxscan.com/tx/${transaction}`}
+                    {"top-center"}
+                    < button > Retry</button>
+                </div >
+            )
+
         } catch (error) {
-            console.error('Error minting NFT:', error);
+            console.error(error);
+            toast.error("Identity Pass Minting Failed !", {
+                position: "top-right"
+            });
+
+            toast(
+                <div>
+                    {/* @ts-ignore */}
+                    {error?.reason}
+                    {/* by default will show on top-right */}
+                </div>
+            )
         }
     };
     return (
@@ -129,7 +152,7 @@ const ProfileForm: React.FC = () => {
                         </div>
 
                         <div className=" flex flex-col text-left mb-6">
-                        <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Category</label>
+                            <label htmlFor="text" className=" mb-2 text-lg font-medium text-white dark:text-white">Category</label>
                             <select
                                 name="category"
                                 value={formState.category}
@@ -138,9 +161,9 @@ const ProfileForm: React.FC = () => {
                                 required
                             >
                                 <option value="">Select</option>
-                                <option value="male">Patient</option>
-                                <option value="female">Doctor</option>
-                                <option value="other">Institute</option>
+                                <option value="patient">Patient</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="institute">Institute</option>
                             </select>
                         </div>
 
@@ -160,6 +183,7 @@ const ProfileForm: React.FC = () => {
 
                 </div>
             </div>
+            <ToastContainer />
         </div>
     )
 }

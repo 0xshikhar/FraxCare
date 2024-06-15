@@ -10,11 +10,9 @@ import {
     getDefaultWallets,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import {
-    QueryClientProvider,
-    QueryClient,
-} from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient} from "@tanstack/react-query";
 import 'dotenv/config'
+import { config } from '@/lib/config';
 
 import {
     polygonMumbai,
@@ -22,12 +20,12 @@ import {
     fraxtalTestnet
 } from 'wagmi/chains';
 
-const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
-    projectId: 'YOUR_PROJECT_ID',
-    chains: [fraxtal, fraxtalTestnet, polygonMumbai, ],
-    ssr: true, // If your dApp uses server side rendering (SSR)
-});
+// const config = getDefaultConfig({
+//     appName: 'My RainbowKit App',
+//     projectId: 'YOUR_PROJECT_ID',
+//     chains: [fraxtal, fraxtalTestnet, polygonMumbai, ],
+//     ssr: true, // If your dApp uses server side rendering (SSR)
+// });
 
 const projectId = '9811958bd307518b364ff7178034c435';
 
