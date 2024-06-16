@@ -8,6 +8,7 @@ import { config } from '@/lib/config'
 import { ethers } from 'ethers';
 import { v4 as uuidv4 } from 'uuid';
 import IdentityPassNFT from '@/lib/contracts/IdentityPassNFT.json';
+import { IdentityCardContract } from '@/lib/constant'
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 // declare module 'uuid';
@@ -49,11 +50,9 @@ const ProfileForm: React.FC = () => {
         const uniqueId = uuidv4(); // Generate a unique ID for the NFT  
         console.log("handle submit called", formState, uniqueId)
 
-        const contractAddress = '0x6E83054913aA6C616257Dae2e87BC44F9260EDc6';
-
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, IdentityPassNFT.abi, signer);
+        const contract = new ethers.Contract(IdentityCardContract, IdentityPassNFT.abi, signer);
 
         try {
             const transaction = await contract.mintIdentityNFT(

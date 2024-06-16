@@ -5,22 +5,22 @@ export default function Home() {
   return (
     <>
       <main>
-        <section className="relative bg-green-50 dark:bg-gradient-to-r from-gray-800 via-gray-900 to-black pt-28 lg:pt-18 pb-32 lg:pb-4">
+        <section className="relative bg-green-50 dark:bg-gradient-to-l from-gray-800 via-gray-900 to-black pt-28 lg:pt-18 pb-32 lg:pb-4">
           <div className="mx-auto lg:max-w-7xl w-full px-5 sm:px-10 md:px-12 lg:px-5 relative">
             <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 lg:-translate-x-0 lg:-translate-y-0 lg:left-0 lg:top-16 w-40 h-40 skew-x-6 opacity-50 dark:opacity-80 rounded-full bg-gradient-to-bl from-green-600 to-sky-400 blur-3xl flex" />
             <div className="flex text-center lg:text-left flex-col lg:items-center lg:flex-row gap-8 lg:gap-10 xl:gap-12 relative max-w-4xl lg:max-w-none">
               <div className="space-y-8 xl:space-y-10 lg:py-12 flex-1 lg:w-1/2">
                 <div className="text-green-950 dark:text-white text-3xl sm:text-4xl/tight md:text-5xl/tight xl:text-5xl/tight font-bold">
-                  The only health record app you need<span className="text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-sky-600"> <br/> FraxCare</span>
+                  The only health record app you need<span className="text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-[#98ee2b]"> <br/> FraxCare</span>
                 </div>
                 <div className="text-gray-700 dark:text-gray-300 max-w-md mx-auto lg:max-w-none">
                   <p className="text-lg">FraxCare is a decentralized health record app that allows you to store your health records securely and access them from anywhere in the world.</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 z-30 sm:w-max sm:flex-nowrap mx-auto lg:mx-0">
-                  <Link href="/create" className="px-5 h-12 flex items-center sm:w-max w-full justify-center bg-gradient-to-br from-green-700 to-sky-600 text-white rounded-lg ease-linear transition">
+                  <Link href="/create" className="px-5 h-12 flex items-center sm:w-max w-full justify-center bg-gradient-to-br from-green-700 to-[#98ee2b] text-white rounded-lg ease-linear transition">
                     Create Profile
                   </Link>
-                  <Link href="#" className="px-5 h-12 flex items-center sm:w-max w-full justify-center gap-x-3 border border-gray-200 dark:border-gray-900/60 rounded-lg text-green-800 dark:text-gray-100 bg-green-50 dark:bg-gray-900">
+                  <Link href="#" className="px-5 h-12 flex items-center sm:w-max w-full justify-center gap-x-3 border border-gray-200 dark:border-gray-900/60 rounded-lg text-green-800 dark:text-gray-100 bg-green-50 dark:bg-black">
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -33,7 +33,7 @@ export default function Home() {
                   {
                     metrics.map(metric => (
                       <div key={metric.id} className="flex items-center gap-x-4 py-4 sm:py-0">
-                        <span className="w-10 h-10 text-white bg-gradient-to-br from-green-700 to-sky-400 rounded-md flex items-center justify-center">
+                        <span className="w-10 h-10 text-white bg-gradient-to-br from-green-700 to-[#98ee2b] rounded-md flex items-center justify-center">
                           {metric.icon}
                         </span>
                         <div className="flex-1 flex flex-col text-sm">
@@ -47,7 +47,7 @@ export default function Home() {
               </div>
               <div aria-hidden="true" className="flex-1 lg:w-1/2 relative hidden lg:flex justify-end pr-8">
                 <div className="rounded-lg absolute right-0 bottom-0 w-11/12 h-2/5 bg-gradient-to-tr from-green-50 to-sky-100 dark:bg-gradient-to-tr dark:from-gray-950 dark:to-gray-700" />
-                <Image src="/images/portrait-of-smiling-med.webp" width={3200} height={1900} className="w-11/12 h-auto relative" alt="portrait-of-smiling-medical-worker-girl-doctor" />
+                <Image src="/fitness_tracker.svg" width={3200} height={1900} className="w-11/12 h-auto relative" alt="portrait-of-smiling-medical-worker-girl-doctor" />
               </div>
             </div>
           </div>

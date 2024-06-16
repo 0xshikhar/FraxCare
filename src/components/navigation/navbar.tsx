@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import fraxLogo from "../../../public/images/frax-logo.png"
+import fraxLogo from "../../../public/assests/frax-logo.png"
 import { AiOutlineSearch } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
