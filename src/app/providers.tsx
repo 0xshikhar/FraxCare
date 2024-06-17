@@ -47,7 +47,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
                 <RainbowKitProvider appInfo={demoAppInfo}>
+                    <div className='min-h-screen'>
                     {mounted && children}
+                    </div>
                 </RainbowKitProvider>
             </QueryClientProvider>
         </WagmiProvider>

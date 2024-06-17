@@ -1,11 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Form, FormControl } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
@@ -13,15 +11,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SelectItem } from "@/components/ui/select";
 import {
   Doctors,
-  GenderOptions,
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/lib/constant";
-import { registerPatient } from "@/lib/actions/patient.actions";
-import { PatientFormValidation } from "@/lib/validation";
 
 import "react-datepicker/dist/react-datepicker.css";
-import "react-phone-number-input/style.css";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import { FileUploader } from "../FileUploader";
 import SubmitButton from "../SubmitButton";
@@ -29,9 +23,10 @@ import SubmitButton from "../SubmitButton";
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showOtherDoctorInput, setShowOtherDoctorInput] = useState(false);
 
-  const form = useForm<z.infer<typeof PatientFormValidation>>({
-    resolver: zodResolver(PatientFormValidation),
+
+  const form = useForm({
     defaultValues: {
       ...PatientFormDefaultValues,
       name: user.name,
@@ -40,7 +35,7 @@ const RegisterForm = ({ user }: { user: User }) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof PatientFormValidation>) => {
+  const onSubmit = async (values: any) => {
     setIsLoading(true);
 
     // Store file info in form data as
@@ -65,7 +60,6 @@ const RegisterForm = ({ user }: { user: User }) => {
         email: values.email,
         phone: values.phone,
         birthDate: new Date(values.birthDate),
-        gender: values.gender,
         address: values.address,
         occupation: values.occupation,
         emergencyContactName: values.emergencyContactName,
@@ -85,11 +79,10 @@ const RegisterForm = ({ user }: { user: User }) => {
         privacyConsent: values.privacyConsent,
       };
 
-      const newPatient = await registerPatient(patient);
-
-      if (newPatient) {
-        router.push(`/patients/${user.$id}/new-appointment`);
-      }
+      // const newPatient = await registerPatient(patient);
+      // if (newPatient) {
+      //   router.push(`/patients/${user.$id}/new-appointment`);
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -104,13 +97,13 @@ const RegisterForm = ({ user }: { user: User }) => {
         className="flex-1 space-y-12"
       >
         <section className="space-y-4">
-          <h1 className="header">Welcome 👋</h1>
+          <h1 className="text-3xl font-semibold">Welcome 👋</h1>
           <p className="text-dark-700">Let us know more about yourself.</p>
         </section>
 
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <h2 className="sub-header">Personal Information</h2>
+            <h2 className="sub-header font-semibold text-xl">Personal Information</h2>
           </div>
 
           {/* NAME */}
@@ -148,46 +141,22 @@ const RegisterForm = ({ user }: { user: User }) => {
           {/* BirthDate & Gender */}
           <div className="flex flex-col gap-6 xl:flex-row">
             <CustomFormField
-              fieldType={FormFieldType.DATE_PICKER}
-              control={form.control}
-              name="birthDate"
-              label="Date of birth"
-            />
-
-            <CustomFormField
-              fieldType={FormFieldType.SKELETON}
-              control={form.control}
-              name="gender"
-              label="Gender"
-              renderSkeleton={(field) => (
-                <FormControl>
-                  <RadioGroup
-                    className="flex h-11 gap-6 xl:justify-between"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    {GenderOptions.map((option, i) => (
-                      <div key={option + i} className="radio-group">
-                        <RadioGroupItem value={option} id={option} />
-                        <Label htmlFor={option} className="cursor-pointer">
-                          {option}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              )}
-            />
-          </div>
-
-          {/* Address & Occupation */}
-          <div className="flex flex-col gap-6 xl:flex-row">
-            <CustomFormField
               fieldType={FormFieldType.INPUT}
               control={form.control}
               name="address"
               label="Address"
               placeholder="14 street, New york, NY - 5101"
+            />
+
+          </div>
+
+          {/* Address & Occupation */}
+          <div className="flex flex-col gap-6 xl:flex-row">
+            <CustomFormField
+              fieldType={FormFieldType.DATE_PICKER}
+              control={form.control}
+              name="birthDate"
+              label="Date of birth"
             />
 
             <CustomFormField
@@ -225,6 +194,7 @@ const RegisterForm = ({ user }: { user: User }) => {
           </div>
 
           {/* PRIMARY CARE PHYSICIAN */}
+        
           <CustomFormField
             fieldType={FormFieldType.SELECT}
             control={form.control}
@@ -242,11 +212,22 @@ const RegisterForm = ({ user }: { user: User }) => {
                     alt="doctor"
                     className="rounded-full border border-dark-500"
                   />
-                  <p>{doctor.name}</p>
+                  <p className="text-black">{doctor.name}</p>
                 </div>
               </SelectItem>
             ))}
+            <SelectItem value="Others">Others</SelectItem>
           </CustomFormField>
+
+          {showOtherDoctorInput && (
+            <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name="otherPhysician"
+              label="Enter doctor's name"
+              placeholder="Dr. Jane Doe"
+            />
+          )}
 
           {/* INSURANCE & POLICY NUMBER */}
           <div className="flex flex-col gap-6 xl:flex-row">
@@ -355,27 +336,12 @@ const RegisterForm = ({ user }: { user: User }) => {
             fieldType={FormFieldType.CHECKBOX}
             control={form.control}
             name="treatmentConsent"
-            label="I consent to receive treatment for my health condition."
+            label="I consent to receive treatment for my health condition and the information provided is accurate to the best of my knowledge."
           />
 
-          <CustomFormField
-            fieldType={FormFieldType.CHECKBOX}
-            control={form.control}
-            name="disclosureConsent"
-            label="I consent to the use and disclosure of my health
-            information for treatment purposes."
-          />
-
-          <CustomFormField
-            fieldType={FormFieldType.CHECKBOX}
-            control={form.control}
-            name="privacyConsent"
-            label="I acknowledge that I have reviewed and agree to the
-            privacy policy"
-          />
         </section>
 
-        <SubmitButton isLoading={isLoading}>Submit and Continue</SubmitButton>
+        <SubmitButton className="bg-[#98ee2b] text-black w-full py-4" isLoading={isLoading}>Submit and Continue</SubmitButton>
       </form>
     </Form>
   );
