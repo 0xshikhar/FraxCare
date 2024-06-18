@@ -13,6 +13,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { getIDByAddress } from "@/lib/interact";
 import Link from 'next/link';
+import { useAtom } from 'jotai';
+import { userAtom } from '@/lib/atom';
+import { set } from 'react-hook-form';
 // declare module 'uuid';
 
 interface PatientFormState {
@@ -34,6 +37,7 @@ const ProfileForm: React.FC = () => {
     const nftId = getIDByAddress(address);
     console.log("nftId", nftId)
 
+    const [userProfile, setUserProfile] = useAtom(userAtom);
     const [formState, setFormState] = useState<PatientFormState>({
         name: '',
         age: '',
@@ -53,7 +57,8 @@ const ProfileForm: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
+        // @ts-ignore
+        setUserProfile(formState);
         const uniqueId = uuidv4(); // Generate a unique ID for the NFT  
         console.log("handle submit called", formState, uniqueId)
 

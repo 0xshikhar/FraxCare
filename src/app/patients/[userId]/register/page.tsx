@@ -13,7 +13,7 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
         <div className="flex min-h-screen text-white bg-black">
             <section className="remove-scrollbar container ml-10 pl-10">
                 <div className="sub-container max-w-[860px] flex-1 flex-col py-10">
-
+                    {/* @ts-ignore */}
                     <RegisterForm user={userId} />
                 </div>
             </section>

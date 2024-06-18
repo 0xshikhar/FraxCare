@@ -111,10 +111,8 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             className="ml-2"
           />
           <FormControl>
-            <ReactDatePicker
-              showTimeSelect={props.showTimeSelect ?? false}
-              selected={field.value}
-              onChange={(date: Date) => field.onChange(date)}
+            {/* @ts-ignore */}
+            <ReactDatePicker showTimeSelect={props.showTimeSelect ?? false} selected={field.value} onChange={(date: Date) => field.onChange(date)}
               timeInputLabel="Time:"
               dateFormat={props.dateFormat ?? "MM/dd/yyyy"}
               wrapperClassName="date-picker"
