@@ -1,10 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-
 import { Form, FormControl } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -19,12 +17,29 @@ import "react-datepicker/dist/react-datepicker.css";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import { FileUploader } from "../FileUploader";
 import SubmitButton from "../SubmitButton";
+import { useAtom } from 'jotai';
+import { userAtom } from '@/lib/atom';
 
 const RegisterForm = ({ user }: { user: User }) => {
-  const router = useRouter();
+  const { control, handleSubmit, watch } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [showOtherDoctorInput, setShowOtherDoctorInput] = useState(false);
+  const [userProfile] = useAtom(userAtom);
+  console.log("userProfile", userProfile)
 
+  // Watch for changes in the primaryPhysician field
+  const primaryPhysician = watch('primaryPhysician');
+
+  // Check if the selected value is "Others" and update the state
+  useEffect(() => {
+    if (primaryPhysician === 'Others') {
+      setShowOtherDoctorInput(true);
+      console.log("showOtherDoctorInput", showOtherDoctorInput)
+    } else {
+      setShowOtherDoctorInput(false);
+
+    }
+  }, [primaryPhysician]);
 
   const form = useForm({
     defaultValues: {
@@ -34,6 +49,7 @@ const RegisterForm = ({ user }: { user: User }) => {
       phone: user.phone,
     },
   });
+
 
   const onSubmit = async (values: any) => {
     setIsLoading(true);
@@ -107,12 +123,11 @@ const RegisterForm = ({ user }: { user: User }) => {
           </div>
 
           {/* NAME */}
-
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
             name="name"
-            placeholder="John Doe"
+            placeholder={userProfile?.name || "John Doe"}
             iconSrc="/assets/icons/user.svg"
             iconAlt="user"
           />
@@ -124,7 +139,7 @@ const RegisterForm = ({ user }: { user: User }) => {
               control={form.control}
               name="email"
               label="Email address"
-              placeholder="johndoe@gmail.com"
+              placeholder="hi@gmail.com"
               iconSrc="/assets/icons/email.svg"
               iconAlt="email"
             />
@@ -190,14 +205,13 @@ const RegisterForm = ({ user }: { user: User }) => {
 
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <h2 className="sub-header">Medical Information</h2>
+            <h2 className="sub-header font-semibold text-xl">Medical Information</h2>
           </div>
 
           {/* PRIMARY CARE PHYSICIAN */}
-        
           <CustomFormField
             fieldType={FormFieldType.SELECT}
-            control={form.control}
+            control={control}
             name="primaryPhysician"
             label="Primary care physician"
             placeholder="Select a physician"
@@ -222,9 +236,9 @@ const RegisterForm = ({ user }: { user: User }) => {
           {showOtherDoctorInput && (
             <CustomFormField
               fieldType={FormFieldType.INPUT}
-              control={form.control}
+              control={control}
               name="otherPhysician"
-              label="Enter doctor's name"
+              label="Enter your physician's name"
               placeholder="Dr. Jane Doe"
             />
           )}
@@ -289,7 +303,7 @@ const RegisterForm = ({ user }: { user: User }) => {
 
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <h2 className="sub-header">Identification and Verfication</h2>
+            <h2 className="sub-header font-semibold text-xl">Identification and Verfication</h2>
           </div>
 
           <CustomFormField

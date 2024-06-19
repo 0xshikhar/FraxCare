@@ -15,7 +15,6 @@ import { getIDByAddress } from "@/lib/interact";
 import Link from 'next/link';
 import { useAtom } from 'jotai';
 import { userAtom } from '@/lib/atom';
-import { set } from 'react-hook-form';
 // declare module 'uuid';
 
 interface PatientFormState {
@@ -57,10 +56,18 @@ const ProfileForm: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // @ts-ignore
-        setUserProfile(formState);
+
         const uniqueId = uuidv4(); // Generate a unique ID for the NFT  
-        console.log("handle submit called", formState, uniqueId)
+        // updating form state of uniqueId 
+        setFormState(prevState => ({
+            ...prevState,
+            uniqueId: uniqueId,
+        }));
+
+        console.log("handle submit called",  { ...formState, uniqueId })
+
+        // @ts-ignore
+        setUserProfile({ ...formState, uniqueId }); // passing updated user profile state 
 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
