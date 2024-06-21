@@ -12,7 +12,6 @@ import {
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/lib/constant";
-
 import "react-datepicker/dist/react-datepicker.css";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import { FileUploader } from "../FileUploader";
@@ -50,6 +49,16 @@ const RegisterForm = ({ user }: { user: User }) => {
     },
   });
 
+  const downloadJson = (object: any, filename: string) => {
+    const blob = new Blob([JSON.stringify(object)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
 
   const onSubmit = async (values: any) => {
     setIsLoading(true);
@@ -63,6 +72,8 @@ const RegisterForm = ({ user }: { user: User }) => {
       const blobFile = new Blob([values.identificationDocument[0]], {
         type: values.identificationDocument[0].type,
       });
+
+      console.log("formData", formData, "blobFile", blobFile, "values", values)
 
       formData = new FormData();
       formData.append("blobFile", blobFile);

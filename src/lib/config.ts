@@ -26,3 +26,18 @@ export const config = createConfig({
     },
     ssr: true,
 });
+
+
+/**
+ * Retrieves the Pinata settings from environment variables.
+ * @returns An object containing the Pinata gateway and JWT.
+ */
+export const getPinataSettings = () => {
+    const gateway = process.env.NEXT_PUBLIC_PINATA_GATEWAY;
+    const jwt = process.env.PINATA_JWT;
+
+    return {
+        gateway,
+        jwt,
+    };
+};
